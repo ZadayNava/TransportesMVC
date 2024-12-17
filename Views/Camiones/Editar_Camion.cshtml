@@ -1,0 +1,83 @@
+﻿@model DTO.Camiones_DTO
+@*no puede recibir otros datos que no venga de dto*@
+@*Indicamos a razor que utilizaremos un modelo a especifico*@
+<h2>@ViewBag.Titulo</h2>
+
+@*Comenzamos a crear nuestro formulario
+    HTML HELPER BegingForm es el HTML Helper que genera el codigo del formulario
+    BeginForm("Metodo", "Controlador", Metodo del protocolo, Especificamos al formualrio que enviaremos inforamacion encriptada (imgs))*@
+@using (Html.BeginForm("Editar_Camion", "Camiones", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        <div class="col-12">
+            <div>
+                @*Recuperar y encviar la informacin NO EDITABLE EN 2DO PLANO*@
+                @*esta informacion no se  muestra en el formulario, p es requisitop para nuetsro modelo *@
+
+                @Html.HiddenFor(model => model.UrlFoto)
+                @Html.HiddenFor(model => model.ID_Camion)
+
+                @*Generamos la etiqueta label*@
+                @Html.LabelFor(model => model.Matricula)
+                @*generamos una etiqueta input*@
+                @Html.TextBoxFor(model => model.Matricula, new { @class = "form-control", @type = "text" })
+                @*generamos un espacio para el msg de validacion*@
+                @Html.ValidationMessageFor(model => model.Matricula, null)
+            </div>
+            <div>
+                @*Generamos la etiqueta label*@
+                @Html.LabelFor(model => model.Capacidad)
+                @*generamos una etiqueta input*@
+                @Html.TextBoxFor(model => model.Capacidad, new { @class = "form-control", @type = "number" })
+                @*generamos un espacio para el msg de validacion*@
+                @Html.ValidationMessageFor(model => model.Capacidad, null)
+            </div>
+            <div>
+                @*Generamos la etiqueta label*@
+                @Html.LabelFor(model => model.Marca)
+                @*generamos una etiqueta input*@
+                @Html.TextBoxFor(model => model.Marca, new { @class = "form-control", @type = "text" })
+                @*generamos un espacio para el msg de validacion*@
+                @Html.ValidationMessageFor(model => model.Matricula, null)
+            </div>
+            <div>
+                @*Generamos la etiqueta label*@
+                @Html.LabelFor(model => model.Modelo)
+                @*generamos una etiqueta input*@
+                @Html.TextBoxFor(model => model.Modelo, new { @class = "form-control", @type = "text" })
+                @*generamos un espacio para el msg de validacion*@
+                @Html.ValidationMessageFor(model => model.Modelo, null)
+            </div>
+            <div>
+                @*Generamos la etiqueta label*@
+                @Html.LabelFor(model => model.Kilometraje)
+                @*generamos una etiqueta input*@
+                @Html.TextBoxFor(model => model.Kilometraje, new { @class = "form-control", @type = "number" })
+                @*generamos un espacio para el msg de validacion*@
+                @Html.ValidationMessageFor(model => model.Kilometraje, null)
+            </div>
+            <div>
+                @*Generamos la etiqueta label*@
+                @Html.LabelFor(model => model.Disponibilidad)
+                @*generamos una etiqueta input*@
+                @Html.CheckBoxFor(model => model.Disponibilidad)
+            </div>
+            @*ddl tipo de camion*@
+            <div>
+                @*Generamos la etiqueta label*@
+                @Html.LabelFor(model => model.Tipo_Camion)
+                @*generamos una dropdownlist que se alimenta de la lista que pasamos por el viewbag*@
+                @Html.DropDownListFor(model => model.Tipo_Camion, new SelectList(ViewBag.ListaTipos, "Descripcion", "Descripcion"), new { @class = "form-control" })
+            </div>
+            @*imagne*@
+            <div>
+                @Html.LabelFor(model => model.UrlFoto)
+                <input type="file" name="imagen" id="imagen" />
+            </div>
+            @*boton de guardar*@
+            <div style="text-align:right;">
+                <input value="Guardar" class="btn btn-success" type="submit" />
+            </div>
+        </div>
+    </div>
+}

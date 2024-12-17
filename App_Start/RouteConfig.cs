@@ -12,7 +12,7 @@ namespace TransportesMVC
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+            //se establece dode se mapea la ruta
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
