@@ -296,6 +296,44 @@ namespace TransportesMVC.Controllers
                 return View(model);
             }
         }
+        //GET: Eliminar_CAmion/{ID}
+        public ActionResult Eliminar_Camion(int id)
+        {
+            try
+            {
+                using (TransportesEntities context = new TransportesEntities()) 
+                {
+                    //voy a aleminar el camion que deseo eliminar
+                    var camion = context.Camiones.FirstOrDefault(x => x.ID_Camion == id);
+                    //vlido si realmente existe dicho camion
+                    if(camion == null)
+                    {
+                        //sweet alert
+                        SweetAlert("No encontrado", $"No hemos encontradi el camion con identificador: {id}", NotificationType.info);
+                        return RedirectToAction("Index");
+                    }
+                    //procedo a eliminra
+                    context.Camiones.Remove(camion);
+                    context.SaveChanges();
+                    //sweetalert
+                    SweetAlert("Eliminado", $"Ha ocurrido un error: ", NotificationType.success);
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                //sweetalert
+                SweetAlert("Opsss...", $"Ha ocurrido un error: {ex.Message}", NotificationType.error);
+                return RedirectToAction("Index");
+            }
+        }
+        //GET: Confirmar ELiminar
+        public ActionResult Confirmar_Eliminar(int id)
+        {
+            SweetAlert_Eliminar(id);
+            return RedirectToAction("Index");
+        }
+
         #region Auxiliares
         private class Opcines
         {
@@ -312,6 +350,52 @@ namespace TransportesMVC.Controllers
                 new Opcines() {Numero = "3", Descripcion = "Transporte"}
             };
             ViewBag.ListaTipos = Lista_Opciones;
+        }
+        #endregion
+
+        #region Sweet Alert
+        //declaraciones de un htmlhelper personalizado: Digase que alquel metodo auxiliar que me permite construir codigo html/s en tiempo real basado en las acciones del razor/controller
+        private void SweetAlert(string title, string msg, NotificationType type)
+        {
+            var script = "<script languaje='javascript'> " +
+                         "Swal.fire({" +
+                         "title: '" + title + "'," +
+                         "text: '" + msg + "'," +
+                         "icon: '" + type + "'" +
+                         "});" +
+                         "</script>";
+            //TempData funciona como ViewBag, pasando informacion del controlador a cualquier parte de mi proyecto, sinedo este, mas observable y con un tiempo de vida mayoe
+            TempData["sweetalert"] = script;
+        }
+        private void SweetAlert_Eliminar(int id)
+        {
+            var script = "<script languaje='javascript'>" +
+                "Swal.fire({" +
+                "title: '¿Estás Seguro?'," +
+                "text: 'Estás apunto de Eliminar el Camión: " + id.ToString() + "'," +
+                "icon: 'info'," +
+                "showDenyButton: true," +
+                "showCancelButton: true," +
+                "confirmButtonText: 'Eliminar'," +
+                "denyButtonText: 'Cancelar'" +
+                "}).then((result) => {" +
+                "if (result.isConfirmed) {  " +
+                "window.location.href = '/Camiones/Eliminar_Camion/" + id + "';" +
+                "} else if (result.isDenied) {  " +
+                "Swal.fire('Se ha cancelado la operación','','info');" +
+                "}" +
+                "});" +
+                "</script>";
+
+            TempData["sweetalert"] = script;
+        }
+
+        public enum NotificationType //el enum es el que limita los datos, en eset caso limita los tipos de notificaiones para el sweet alert
+        {
+            error,
+            success,
+            info,
+            question
         }
         #endregion
     }
